@@ -24,6 +24,7 @@
     $Gallons_Requested_Factor2 = 0.03; 
     $Company_Profit_factor = 0.01;
     $SELECT = "SELECT * FROM Users WHERE UserId = ?";
+    $SELECT1 = "SELECT * FROM Fuelquotes WHERE UserId = ?";
     $stmt = $conn->prepare($SELECT);
         $stmt->bind_param("s", $sessions);
         $stmt->execute();
@@ -32,6 +33,13 @@
         $user = $result->fetch_array(MYSQLI_ASSOC);
         $state = $user['State'];
         $Address1 =$user['Address1'];
+        $stmt->close();
+
+        $stmt = $conn->prepare($SELECT1);
+        $stmt->bind_param("s", $sessions);
+        $stmt->execute();
+        $rnum1 = $stmt->num_rows;
+       
         $stmt->close();
 
 
@@ -52,10 +60,10 @@
         $Total_Amount_Due = escape($Total_Amount_Due);*/
 
 
-        if($gallons_requested > 1000){
+      
             if($state == "TX"){
                 //if history is not empty
-                if($rnum > 0){
+                if($rnum1 > 0){
                     if($gallons_requested > 1000){
                         $Margin = $curremt_price_per_gallon * ($Texas_location_factor - $Rate_History_Factor + $Gallons_Requested_Factor + $Company_Profit_factor);
                     }
@@ -71,9 +79,9 @@
                         $Margin = $curremt_price_per_gallon * ($Texas_location_factor - $No_History_Rate_Factor+ $Gallons_Requested_Factor2 + $Company_Profit_factor);
                     }
                 }
-            }
+              }
             else{
-                if($rnum > 0){
+                if($rnum1 > 0){
                     if($gallons_requested > 1000){
                         $Margin = $curremt_price_per_gallon * ($Other_location_factor - $Rate_History_Factor + $Gallons_Requested_Factor + $Company_Profit_factor);
                     }
@@ -81,6 +89,7 @@
                         $Margin = $curremt_price_per_gallon * ($Other_location_factor - $Rate_History_Factor + $Gallons_Requested_Factor2 + $Company_Profit_factor);
                     }
                 }
+              
                 else{
                     if($gallons_requested > 1000){
                         $Margin = $curremt_price_per_gallon * ($Other_location_factor - $No_History_Rate_Factor+ $Gallons_Requested_Factor + $Company_Profit_factor);
@@ -92,7 +101,7 @@
             
         }
     
-    }
+    
 
     
         $Suggested_price = $curremt_price_per_gallon + $Margin;
