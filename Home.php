@@ -94,7 +94,7 @@
     
     }
 
-    $Margin = $curremt_price_per_gallon * ($Other_location_factor - $No_History_Rate_Factor+ $Gallons_Requested_Factor2 + $Company_Profit_factor);
+    
         $Suggested_price = $curremt_price_per_gallon + $Margin;
         $Total_Amount_Due = $gallons_requested * $Suggested_price;
 
